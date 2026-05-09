@@ -6,7 +6,7 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { Button } from "../components/ui/Button";
 import { Panel } from "../components/ui/Panel";
 import { ROUTES } from "../constants/routes";
-import { saveStoredTree } from "../storage/treeStorage";
+import { getStoredTree, saveStoredTree } from "../storage/treeStorage";
 import { parseJson } from "../utils/validation/jsonValidation";
 import { validateTreeNode } from "../utils/validation/treeValidation";
 
@@ -39,9 +39,15 @@ const isJsonFile = (file: File) => {
   return file.type === "application/json" || file.name.toLowerCase().endsWith(".json");
 };
 
+const getInitialJsonInput = () => {
+  const storedTree = getStoredTree();
+
+  return storedTree ? JSON.stringify(storedTree, null, 2) : "";
+};
+
 export const HomePage = () => {
   const navigate = useNavigate();
-  const [jsonInput, setJsonInput] = useState("");
+  const [jsonInput, setJsonInput] = useState(getInitialJsonInput);
   const [validationStatus, setValidationStatus] =
     useState<ValidationStatus>(INITIAL_VALIDATION_STATUS);
   const isLoadDisabled = jsonInput.trim().length === 0;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PageContainer } from "../components/layout/PageContainer";
+import { TreePreview } from "../components/tree/TreePreview";
 import { Button } from "../components/ui/Button";
 import { EmptyState } from "../components/ui/EmptyState";
 import { Panel } from "../components/ui/Panel";
@@ -38,13 +39,9 @@ export const TreePage = () => {
             />
           </div>
 
-          <div className="flex min-h-[520px] items-center justify-center p-6 text-center">
+          <div className="flex min-h-[520px] p-6 text-center">
             {tree ? (
-              <div className="w-full max-w-sm rounded-lg border border-border-soft bg-white p-4 text-left">
-                <p>{tree.name}</p>
-                <p>{tree.type}</p>
-                <p>{tree.type === "folder" ? tree.children.length : "-"}</p>
-              </div>
+              <TreePreview tree={tree} />
             ) : (
               <EmptyState
                 title="No tree loaded yet"
