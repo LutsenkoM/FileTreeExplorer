@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import type { ChangeEvent } from "react";
 import { useState } from "react";
 import { PageContainer } from "../components/layout/PageContainer";
 import { Button } from "../components/ui/Button";
@@ -31,19 +32,18 @@ const INITIAL_VALIDATION_STATUS: ValidationStatus = {
   message: "Validation message will appear here.",
 };
 
+const isJsonFile = (file: File) => {
+  return file.type === "application/json" || file.name.toLowerCase().endsWith(".json");
+};
+
 export const HomePage = () => {
   const [jsonInput, setJsonInput] = useState("");
   const [validationStatus, setValidationStatus] =
     useState<ValidationStatus>(INITIAL_VALIDATION_STATUS);
   const isLoadDisabled = jsonInput.trim().length === 0;
 
-  const handleJsonInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setJsonInput(event.target.value);
-    setValidationStatus(INITIAL_VALIDATION_STATUS);
-  };
-
-  const handleLoadJson = () => {
-    const parsedJson = parseJson(jsonInput);
+  const validateJsonInput = (value: string) => {
+    const parsedJson = parseJson(value);
 
     if (!parsedJson.isValid) {
       setValidationStatus({
@@ -69,6 +69,44 @@ export const HomePage = () => {
     });
   };
 
+  const handleJsonInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setJsonInput(event.target.value);
+    setValidationStatus(INITIAL_VALIDATION_STATUS);
+  };
+
+  const handleLoadJson = () => {
+    validateJsonInput(jsonInput);
+  };
+
+  const handleJsonFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!isJsonFile(file)) {
+      setValidationStatus({
+        type: VALIDATION_STATUS.ERROR,
+        message: "Please upload a JSON file.",
+      });
+      event.target.value = "";
+      return;
+    }
+
+    try {
+      const fileContent = await file.text();
+      setJsonInput(fileContent);
+    } catch {
+      setValidationStatus({
+        type: VALIDATION_STATUS.ERROR,
+        message: "Could not read the selected file.",
+      });
+    }
+
+    event.target.value = "";
+  };
+
   return (
     <PageContainer
       title="Welcome to FileTree Explorer"
@@ -83,7 +121,12 @@ export const HomePage = () => {
 
           <label className="inline-flex cursor-pointer items-center rounded-md border border-border-soft bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50">
             Upload JSON file
-            <input accept="application/json,.json" className="sr-only" type="file" />
+            <input
+              accept="application/json,.json"
+              className="sr-only"
+              onChange={handleJsonFileUpload}
+              type="file"
+            />
           </label>
         </div>
 
