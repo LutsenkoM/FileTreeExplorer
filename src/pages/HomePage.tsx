@@ -1,11 +1,73 @@
+import { clsx } from "clsx";
 import { useState } from "react";
 import { PageContainer } from "../components/layout/PageContainer";
 import { Button } from "../components/ui/Button";
 import { Panel } from "../components/ui/Panel";
+import { parseJson } from "../utils/validation/jsonValidation";
+import { validateTreeNode } from "../utils/validation/treeValidation";
+
+const VALIDATION_STATUS = {
+  IDLE: "idle",
+  SUCCESS: "success",
+  ERROR: "error",
+} as const;
+
+type ValidationStatus =
+  | {
+      type: typeof VALIDATION_STATUS.IDLE;
+      message: string;
+    }
+  | {
+      type: typeof VALIDATION_STATUS.SUCCESS;
+      message: string;
+    }
+  | {
+      type: typeof VALIDATION_STATUS.ERROR;
+      message: string;
+    };
+
+const INITIAL_VALIDATION_STATUS: ValidationStatus = {
+  type: VALIDATION_STATUS.IDLE,
+  message: "Validation message will appear here.",
+};
 
 export const HomePage = () => {
   const [jsonInput, setJsonInput] = useState("");
+  const [validationStatus, setValidationStatus] =
+    useState<ValidationStatus>(INITIAL_VALIDATION_STATUS);
   const isLoadDisabled = jsonInput.trim().length === 0;
+
+  const handleJsonInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setJsonInput(event.target.value);
+    setValidationStatus(INITIAL_VALIDATION_STATUS);
+  };
+
+  const handleLoadJson = () => {
+    const parsedJson = parseJson(jsonInput);
+
+    if (!parsedJson.isValid) {
+      setValidationStatus({
+        type: VALIDATION_STATUS.ERROR,
+        message: parsedJson.error,
+      });
+      return;
+    }
+
+    const validatedTree = validateTreeNode(parsedJson.data);
+
+    if (!validatedTree.isValid) {
+      setValidationStatus({
+        type: VALIDATION_STATUS.ERROR,
+        message: validatedTree.error,
+      });
+      return;
+    }
+
+    setValidationStatus({
+      type: VALIDATION_STATUS.SUCCESS,
+      message: "JSON is valid and matches the expected file tree structure.",
+    });
+  };
 
   return (
     <PageContainer
@@ -27,16 +89,27 @@ export const HomePage = () => {
 
         <textarea
           className="min-h-80 w-full resize-y rounded-md border border-border-soft bg-white px-4 py-3 font-mono text-sm leading-6 text-slate-950 shadow-inner outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10"
-          onChange={(event) => setJsonInput(event.target.value)}
+          onChange={handleJsonInputChange}
           placeholder='{"name":"root","type":"folder","children":[]}'
           spellCheck={false}
           value={jsonInput}
         />
 
-        <div className="mt-4 min-h-6 text-sm text-muted">Validation message will appear here.</div>
+        <div
+          className={clsx(
+            "mt-4 min-h-6 rounded-md px-3 py-2 text-sm",
+            validationStatus.type === VALIDATION_STATUS.IDLE && "bg-transparent text-muted",
+            validationStatus.type === VALIDATION_STATUS.SUCCESS && "bg-green-50 text-success",
+            validationStatus.type === VALIDATION_STATUS.ERROR && "bg-red-50 text-danger",
+          )}
+        >
+          {validationStatus.message}
+        </div>
 
         <div className="mt-6 flex justify-end">
-          <Button disabled={isLoadDisabled}>Load JSON</Button>
+          <Button disabled={isLoadDisabled} onClick={handleLoadJson}>
+            Load JSON
+          </Button>
         </div>
       </Panel>
     </PageContainer>
