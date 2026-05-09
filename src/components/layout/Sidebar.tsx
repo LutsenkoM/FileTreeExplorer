@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { ROUTES } from "../../constants/routes";
 
 const navigationItems = [
-  { label: "Home", to: "/" },
-  { label: "Tree", to: "/tree" },
+  { label: "Home", to: ROUTES.HOME },
+  { label: "Tree", to: ROUTES.TREE },
 ];
 
 export const Sidebar = () => {
@@ -27,7 +28,7 @@ export const Sidebar = () => {
                   : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
               ].join(" ")
             }
-            end={item.to === "/"}
+            end={item.to === ROUTES.HOME}
             to={item.to}
           >
             {item.label}
@@ -45,7 +46,7 @@ export const Sidebar = () => {
                 : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
             ].join(" ")
           }
-          to="/about"
+          to={ROUTES.ABOUT}
         >
           About
         </NavLink>

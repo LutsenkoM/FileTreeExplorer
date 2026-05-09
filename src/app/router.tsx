@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AppLayout } from "../components/layout/AppLayout";
+import { ROUTE_SEGMENTS } from "../constants/routes";
 import { AboutPage } from "../pages/AboutPage";
 import { HomePage } from "../pages/HomePage";
 import { NodeDetailsPage } from "../pages/NodeDetailsPage";
@@ -15,19 +16,19 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "tree",
+        path: ROUTE_SEGMENTS.TREE,
         element: <TreePage />,
       },
       {
-        path: "tree/*",
+        path: ROUTE_SEGMENTS.TREE_DETAILS,
         element: <NodeDetailsPage />,
       },
       {
-        path: "about",
+        path: ROUTE_SEGMENTS.ABOUT,
         element: <AboutPage />,
       },
       {
-        path: "*",
+        path: ROUTE_SEGMENTS.NOT_FOUND,
         element: <NotFoundPage />,
       },
     ],
