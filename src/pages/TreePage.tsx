@@ -1,15 +1,24 @@
+import { useState } from "react";
 import { PageContainer } from "../components/layout/PageContainer";
 import { Button } from "../components/ui/Button";
 import { EmptyState } from "../components/ui/EmptyState";
 import { Panel } from "../components/ui/Panel";
+import { clearStoredTree, getStoredTree } from "../storage/treeStorage";
 
 export const TreePage = () => {
+  const [tree, setTree] = useState(() => getStoredTree());
+
+  const handleClearTree = () => {
+    clearStoredTree();
+    setTree(null);
+  };
+
   return (
     <PageContainer
       title="File Tree"
       description="Loaded tree data will be displayed here after JSON validation."
       actions={
-        <Button disabled variant="secondary">
+        <Button disabled={!tree} onClick={handleClearTree} variant="secondary">
           Clear data
         </Button>
       }
@@ -30,11 +39,19 @@ export const TreePage = () => {
           </div>
 
           <div className="flex min-h-[520px] items-center justify-center p-6 text-center">
-            <EmptyState
-              title="No tree loaded yet"
-              description="Load valid JSON from the Home page to render the expandable file tree."
-              markerClassName="size-14 border-primary/20 bg-primary-soft"
-            />
+            {tree ? (
+              <div className="w-full max-w-sm rounded-lg border border-border-soft bg-white p-4 text-left">
+                <p>{tree.name}</p>
+                <p>{tree.type}</p>
+                <p>{tree.type === "folder" ? tree.children.length : "-"}</p>
+              </div>
+            ) : (
+              <EmptyState
+                title="No tree loaded yet"
+                description="Load valid JSON from the Home page to render the expandable file tree."
+                markerClassName="size-14 border-primary/20 bg-primary-soft"
+              />
+            )}
           </div>
         </section>
 

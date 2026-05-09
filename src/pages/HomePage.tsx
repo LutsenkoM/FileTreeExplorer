@@ -1,9 +1,12 @@
 import { clsx } from "clsx";
 import type { ChangeEvent } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { PageContainer } from "../components/layout/PageContainer";
 import { Button } from "../components/ui/Button";
 import { Panel } from "../components/ui/Panel";
+import { ROUTES } from "../constants/routes";
+import { saveStoredTree } from "../storage/treeStorage";
 import { parseJson } from "../utils/validation/jsonValidation";
 import { validateTreeNode } from "../utils/validation/treeValidation";
 
@@ -37,12 +40,13 @@ const isJsonFile = (file: File) => {
 };
 
 export const HomePage = () => {
+  const navigate = useNavigate();
   const [jsonInput, setJsonInput] = useState("");
   const [validationStatus, setValidationStatus] =
     useState<ValidationStatus>(INITIAL_VALIDATION_STATUS);
   const isLoadDisabled = jsonInput.trim().length === 0;
 
-  const validateJsonInput = (value: string) => {
+  const loadJsonInput = (value: string) => {
     const parsedJson = parseJson(value);
 
     if (!parsedJson.isValid) {
@@ -63,10 +67,12 @@ export const HomePage = () => {
       return;
     }
 
+    saveStoredTree(validatedTree.data);
     setValidationStatus({
       type: VALIDATION_STATUS.SUCCESS,
       message: "JSON is valid and matches the expected file tree structure.",
     });
+    navigate(ROUTES.TREE);
   };
 
   const handleJsonInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -75,7 +81,7 @@ export const HomePage = () => {
   };
 
   const handleLoadJson = () => {
-    validateJsonInput(jsonInput);
+    loadJsonInput(jsonInput);
   };
 
   const handleJsonFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
