@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { NavLink } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
 
@@ -21,12 +22,12 @@ export const Sidebar = () => {
           <NavLink
             key={item.to}
             className={({ isActive }) =>
-              [
+              clsx(
                 "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive
                   ? "bg-primary-soft text-primary"
                   : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
-              ].join(" ")
+              )
             }
             end={item.to === ROUTES.HOME}
             to={item.to}
@@ -39,12 +40,12 @@ export const Sidebar = () => {
       <div className="border-t border-border-soft px-3 py-4">
         <NavLink
           className={({ isActive }) =>
-            [
+            clsx(
               "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
               isActive
                 ? "bg-primary-soft text-primary"
                 : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
-            ].join(" ")
+            )
           }
           to={ROUTES.ABOUT}
         >
