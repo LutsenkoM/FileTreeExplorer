@@ -1,25 +1,20 @@
-import { useState } from "react";
 import { PageContainer } from "../components/layout/PageContainer";
+import { TreeExplorerProvider } from "../context/treeContext/TreeExplorerProvider";
+import { useTreeExplorer } from "../context/treeContext/useTreeExplorer";
 import { TreeView } from "../components/tree/TreeView";
 import { Button } from "../components/ui/Button";
 import { EmptyState } from "../components/ui/EmptyState";
 import { Panel } from "../components/ui/Panel";
-import { clearStoredTree, getStoredTree } from "../storage/treeStorage";
 
-export const TreePage = () => {
-  const [tree, setTree] = useState(() => getStoredTree());
-
-  const handleClearTree = () => {
-    clearStoredTree();
-    setTree(null);
-  };
+const TreePageContent = () => {
+  const { clearTree, tree } = useTreeExplorer();
 
   return (
     <PageContainer
       title="File Tree"
       description="Loaded tree data will be displayed here after JSON validation."
       actions={
-        <Button disabled={!tree} onClick={handleClearTree} variant="secondary">
+        <Button disabled={!tree} onClick={clearTree} variant="secondary">
           Clear data
         </Button>
       }
@@ -61,5 +56,13 @@ export const TreePage = () => {
         </section>
       </Panel>
     </PageContainer>
+  );
+};
+
+export const TreePage = () => {
+  return (
+    <TreeExplorerProvider>
+      <TreePageContent />
+    </TreeExplorerProvider>
   );
 };

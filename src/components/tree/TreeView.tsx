@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { TreeNode } from "../../types/tree";
+import { useTreeExplorer } from "../../context/treeContext/useTreeExplorer";
 import { TreeNodeItem } from "./TreeNodeItem";
 
 type TreeViewProps = {
@@ -7,6 +8,7 @@ type TreeViewProps = {
 };
 
 export const TreeView = ({ tree }: TreeViewProps) => {
+  const { selectPath, selectedPath } = useTreeExplorer();
   const rootPath = tree.name;
   const initialExpandedPaths = useMemo(() => {
     return tree.type === "folder" ? new Set([rootPath]) : new Set<string>();
@@ -14,6 +16,10 @@ export const TreeView = ({ tree }: TreeViewProps) => {
   const [expandedPaths, setExpandedPaths] = useState(initialExpandedPaths);
 
   const handleToggle = (nodePath: string) => {
+    if (nodePath === rootPath) {
+      return;
+    }
+
     setExpandedPaths((currentPaths) => {
       const nextPaths = new Set(currentPaths);
 
@@ -34,7 +40,9 @@ export const TreeView = ({ tree }: TreeViewProps) => {
         expandedPaths={expandedPaths}
         node={tree}
         nodePath={rootPath}
+        onSelect={selectPath}
         onToggle={handleToggle}
+        selectedPath={selectedPath}
       />
     </div>
   );

@@ -5,28 +5,28 @@ type TreeNodeRowProps = {
   node: TreeNode;
   depth?: number;
   isExpanded?: boolean;
-  onToggle?: () => void;
+  isSelected?: boolean;
+  onSelect: () => void;
 };
 
 export const TreeNodeRow = ({
   node,
   depth = 0,
   isExpanded = false,
-  onToggle,
+  isSelected = false,
+  onSelect,
 }: TreeNodeRowProps) => {
   const isFolder = node.type === "folder";
-  const Component = onToggle ? "button" : "div";
 
   return (
-    <Component
+    <button
       className={clsx(
         "flex w-full items-center justify-between gap-3 rounded-md px-3 py-2 text-left text-sm",
-        depth === 0 ? "bg-primary-soft text-primary" : "text-slate-700 hover:bg-slate-50",
-        onToggle && "cursor-pointer",
+        isSelected ? "bg-primary-soft text-primary" : "text-slate-700 hover:bg-slate-50",
       )}
-      onClick={onToggle}
+      onClick={onSelect}
       style={{ paddingLeft: `${12 + depth * 20}px` }}
-      type={onToggle ? "button" : undefined}
+      type="button"
     >
       <div className="flex min-w-0 items-center gap-2">
         {isFolder ? (
@@ -44,6 +44,6 @@ export const TreeNodeRow = ({
       </div>
 
       <span className="shrink-0 text-xs text-muted">{node.type}</span>
-    </Component>
+    </button>
   );
 };
