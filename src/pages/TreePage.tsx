@@ -1,4 +1,5 @@
 import { PageContainer } from "../components/layout/PageContainer";
+import { NodeDetailsPanel } from "../components/details/NodeDetailsPanel";
 import { TreeExplorerProvider } from "../context/treeContext/TreeExplorerProvider";
 import { useTreeExplorer } from "../context/treeContext/useTreeExplorer";
 import { TreeView } from "../components/tree/TreeView";
@@ -43,12 +44,8 @@ const TreePageContent = () => {
           </div>
         </section>
 
-        <section className="flex items-center justify-center p-8 text-center">
-          <EmptyState
-            title="Select a file or folder"
-            description="Node details will appear here after the tree renderer and route resolver are added."
-            markerClassName="size-16"
-          />
+        <section className="p-8">
+          <NodeDetailsPanel />
         </section>
       </Panel>
     </PageContainer>
