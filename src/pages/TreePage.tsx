@@ -2,7 +2,7 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { TreeExplorerProvider } from "../context/treeContext/TreeExplorerProvider";
 import { useTreeExplorer } from "../context/treeContext/useTreeExplorer";
 import { TreeView } from "../components/tree/TreeView";
-import { Button } from "../components/ui/Button";
+import { ClearDataButton } from "../components/ui/ClearDataButton";
 import { EmptyState } from "../components/ui/EmptyState";
 import { Panel } from "../components/ui/Panel";
 
@@ -13,11 +13,7 @@ const TreePageContent = () => {
     <PageContainer
       title="File Tree"
       description="Loaded tree data will be displayed here after JSON validation."
-      actions={
-        <Button disabled={!tree} onClick={clearTree} variant="secondary">
-          Clear data
-        </Button>
-      }
+      actions={<ClearDataButton disabled={!tree} onClick={clearTree} />}
     >
       <Panel className="grid min-h-[620px] grid-cols-[minmax(360px,480px)_1fr] overflow-hidden">
         <section className="border-r border-border-soft">

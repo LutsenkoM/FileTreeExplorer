@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageContainer } from "../components/layout/PageContainer";
 import { Button } from "../components/ui/Button";
+import { ClearDataButton } from "../components/ui/ClearDataButton";
 import { Panel } from "../components/ui/Panel";
 import { ROUTES } from "../constants/routes";
-import { getStoredTree, saveStoredTree } from "../storage/treeStorage";
+import { clearStoredTree, getStoredTree, saveStoredTree } from "../storage/treeStorage";
 import { parseJson } from "../utils/validation/jsonValidation";
 import { validateTreeNode } from "../utils/validation/treeValidation";
 
@@ -90,6 +91,12 @@ export const HomePage = () => {
     loadJsonInput(jsonInput);
   };
 
+  const handleClearData = () => {
+    clearStoredTree();
+    setJsonInput("");
+    setValidationStatus(INITIAL_VALIDATION_STATUS);
+  };
+
   const handleJsonFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
@@ -161,7 +168,8 @@ export const HomePage = () => {
           {validationStatus.message}
         </div>
 
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-end gap-3">
+          <ClearDataButton disabled={jsonInput.length === 0} onClick={handleClearData} />
           <Button disabled={isLoadDisabled} onClick={handleLoadJson}>
             Load JSON
           </Button>
