@@ -5,6 +5,11 @@ export const buildNodePath = (parentPath: string, nodeName: string) => {
   return parentPath ? `${parentPath}/${nodeName}` : nodeName;
 };
 
+// Encodes each path segment so node paths can be used safely in URLs.
+export const encodeNodePath = (nodePath: string) => {
+  return nodePath.split("/").map(encodeURIComponent).join("/");
+};
+
 // Finds a tree node by internal path.
 export const findNodeByPath = (tree: TreeNode, nodePath: string): TreeNode | null => {
   if (nodePath === tree.name) {

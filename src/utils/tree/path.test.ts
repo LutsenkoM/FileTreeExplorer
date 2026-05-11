@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TreeNode } from "../../types/tree";
-import { buildNodePath, findNodeByPath } from "./path";
+import { buildNodePath, encodeNodePath, findNodeByPath } from "./path";
 
 const tree: TreeNode = {
   name: "root",
@@ -43,6 +43,12 @@ describe("buildNodePath", () => {
 
   it("appends a node name to the parent path", () => {
     expect(buildNodePath("root/src", "index.ts")).toBe("root/src/index.ts");
+  });
+});
+
+describe("encodeNodePath", () => {
+  it("encodes every path segment without encoding path separators", () => {
+    expect(encodeNodePath("root/src/my file.ts")).toBe("root/src/my%20file.ts");
   });
 });
 
