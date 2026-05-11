@@ -3,11 +3,16 @@ import { NodeDetailsContent } from "../components/details/NodeDetailsContent";
 import { PageContainer } from "../components/layout/PageContainer";
 import { EmptyState } from "../components/ui/EmptyState";
 import { Panel } from "../components/ui/Panel";
+import { ROUTES } from "../constants/routes";
 import { getStoredTree } from "../storage/treeStorage";
-import { findNodeByPath } from "../utils/tree/path";
+import { encodeNodePath, findNodeByPath } from "../utils/tree/path";
 
 const decodeNodePath = (nodePath: string) => {
   return nodePath.split("/").map(decodeURIComponent).join("/");
+};
+
+const createNodeDetailsHref = (nodePath: string) => {
+  return `${ROUTES.TREE}/${encodeNodePath(nodePath)}`;
 };
 
 export const NodeDetailsPage = () => {
@@ -23,7 +28,11 @@ export const NodeDetailsPage = () => {
     >
       <Panel className="max-w-4xl p-8">
         {node ? (
-          <NodeDetailsContent node={node} nodePath={nodePath} />
+          <NodeDetailsContent
+            getChildHref={createNodeDetailsHref}
+            node={node}
+            nodePath={nodePath}
+          />
         ) : (
           <EmptyState
             title="Node not found"

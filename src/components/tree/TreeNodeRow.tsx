@@ -1,5 +1,7 @@
 import { clsx } from "clsx";
 import type { TreeNode } from "../../types/tree";
+import { formatFileSize } from "../../utils/format/fileSize";
+import { getNodeSize } from "../../utils/tree/size";
 
 type TreeNodeRowProps = {
   node: TreeNode;
@@ -17,6 +19,7 @@ export const TreeNodeRow = ({
   onSelect,
 }: TreeNodeRowProps) => {
   const isFolder = node.type === "folder";
+  const nodeSize = formatFileSize(getNodeSize(node));
 
   return (
     <button
@@ -43,7 +46,7 @@ export const TreeNodeRow = ({
         <span className="truncate font-medium">{node.name}</span>
       </div>
 
-      <span className="shrink-0 text-xs text-muted">{node.type}</span>
+      <span className="shrink-0 text-xs text-muted">{nodeSize}</span>
     </button>
   );
 };

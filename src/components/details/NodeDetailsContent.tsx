@@ -6,6 +6,7 @@ import { FolderDetails } from "./FolderDetails";
 type NodeDetailsContentProps = {
   node: TreeNode;
   nodePath: string;
+  getChildHref?: (nodePath: string) => string;
   headerAction?: ReactNode;
   onSelectPath?: (nodePath: string) => void;
 };
@@ -13,6 +14,7 @@ type NodeDetailsContentProps = {
 export const NodeDetailsContent = ({
   node,
   nodePath,
+  getChildHref,
   headerAction,
   onSelectPath,
 }: NodeDetailsContentProps) => {
@@ -23,6 +25,7 @@ export const NodeDetailsContent = ({
   return (
     <FolderDetails
       headerAction={headerAction}
+      getChildHref={getChildHref}
       node={node}
       nodePath={nodePath}
       onSelectPath={onSelectPath}

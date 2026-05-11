@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import type { FolderNode } from "../../types/tree";
 import { formatFileSize } from "../../utils/format/fileSize";
 import { buildNodePath } from "../../utils/tree/path";
@@ -9,6 +10,7 @@ import { DetailsRow } from "./DetailsRow";
 type FolderDetailsProps = {
   node: FolderNode;
   nodePath: string;
+  getChildHref?: (nodePath: string) => string;
   headerAction?: ReactNode;
   onSelectPath?: (nodePath: string) => void;
 };
@@ -16,6 +18,7 @@ type FolderDetailsProps = {
 export const FolderDetails = ({
   node,
   nodePath,
+  getChildHref,
   headerAction,
   onSelectPath,
 }: FolderDetailsProps) => {
@@ -44,40 +47,36 @@ export const FolderDetails = ({
           <ul className="mt-3 divide-y divide-border-soft rounded-md border border-border-soft">
             {node.children.map((child) => {
               const childPath = buildNodePath(nodePath, child.name);
-              const childContent = (
-                <>
-                  <div className="min-w-0">
-                    <p
-                      className={clsx(
-                        "truncate text-sm font-medium",
-                        onSelectPath
-                          ? "text-primary underline underline-offset-4"
-                          : "text-slate-950",
-                      )}
-                    >
-                      {child.name}
-                    </p>
-                    <p className="mt-1 truncate text-xs text-muted">{childPath}</p>
-                  </div>
-                  <span className="shrink-0 text-xs text-muted">{child.type}</span>
-                </>
+              const childHref = getChildHref?.(childPath);
+              const childSize = formatFileSize(getNodeSize(child));
+              const childNameClassName = clsx(
+                "truncate text-sm font-medium",
+                onSelectPath || childHref
+                  ? "!text-primary !underline !underline-offset-4"
+                  : "text-slate-950",
               );
 
               return (
-                <li key={childPath}>
-                  {onSelectPath ? (
-                    <button
-                      className="flex w-full items-center justify-between gap-4 px-3 py-2 text-left"
-                      onClick={() => onSelectPath(childPath)}
-                      type="button"
-                    >
-                      {childContent}
-                    </button>
-                  ) : (
-                    <div className="flex items-center justify-between gap-4 px-3 py-2">
-                      {childContent}
-                    </div>
-                  )}
+                <li className="flex items-center justify-between gap-4 px-3 py-2" key={childPath}>
+                  <div className="min-w-0">
+                    {onSelectPath ? (
+                      <button
+                        className={childNameClassName}
+                        onClick={() => onSelectPath(childPath)}
+                        type="button"
+                      >
+                        {child.name}
+                      </button>
+                    ) : childHref ? (
+                      <Link className={childNameClassName} to={childHref}>
+                        {child.name}
+                      </Link>
+                    ) : (
+                      <p className={childNameClassName}>{child.name}</p>
+                    )}
+                  </div>
+
+                  <span className="shrink-0 text-xs text-muted">{childSize}</span>
                 </li>
               );
             })}
