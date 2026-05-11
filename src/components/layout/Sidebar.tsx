@@ -36,22 +36,6 @@ export const Sidebar = () => {
           </NavLink>
         ))}
       </nav>
-
-      <div className="border-t border-border-soft px-3 py-4">
-        <NavLink
-          className={({ isActive }) =>
-            clsx(
-              "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
-              isActive
-                ? "bg-primary-soft text-primary"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
-            )
-          }
-          to={ROUTES.ABOUT}
-        >
-          About
-        </NavLink>
-      </div>
     </aside>
   );
 };

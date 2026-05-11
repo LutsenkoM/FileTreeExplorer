@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AppLayout } from "../components/layout/AppLayout";
 import { ROUTE_SEGMENTS } from "../constants/routes";
-import { AboutPage } from "../pages/AboutPage";
 import { HomePage } from "../pages/HomePage";
 import { NodeDetailsPage } from "../pages/NodeDetailsPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
@@ -22,10 +21,6 @@ export const router = createBrowserRouter([
       {
         path: ROUTE_SEGMENTS.TREE_DETAILS,
         element: <NodeDetailsPage />,
-      },
-      {
-        path: ROUTE_SEGMENTS.ABOUT,
-        element: <AboutPage />,
       },
       {
         path: ROUTE_SEGMENTS.NOT_FOUND,
