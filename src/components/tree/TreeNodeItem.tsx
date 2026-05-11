@@ -8,6 +8,7 @@ type TreeNodeItemProps = {
   depth: number;
   expandedPaths: Set<string>;
   selectedPath: string | null;
+  getOriginalNode: (nodePath: string) => TreeNode | null;
   onSelect: (nodePath: string) => void;
   onToggle: (nodePath: string) => void;
 };
@@ -18,10 +19,12 @@ export const TreeNodeItem = ({
   depth,
   expandedPaths,
   selectedPath,
+  getOriginalNode,
   onSelect,
   onToggle,
 }: TreeNodeItemProps) => {
   const isFolder = node.type === "folder";
+  const displayNode = getOriginalNode(nodePath) ?? node;
   const isRoot = depth === 0;
   const isExpanded = isFolder && (isRoot || expandedPaths.has(nodePath));
   const isSelected = selectedPath === nodePath;
@@ -40,7 +43,7 @@ export const TreeNodeItem = ({
         depth={depth}
         isExpanded={isExpanded}
         isSelected={isSelected}
-        node={node}
+        node={displayNode}
         onSelect={handleSelect}
       />
 
@@ -54,6 +57,7 @@ export const TreeNodeItem = ({
                 depth={depth + 1}
                 expandedPaths={expandedPaths}
                 key={childPath}
+                getOriginalNode={getOriginalNode}
                 node={child}
                 nodePath={childPath}
                 onSelect={onSelect}
