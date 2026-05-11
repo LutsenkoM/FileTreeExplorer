@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import { File, Folder, FolderOpen } from "lucide-react";
 import type { TreeNode } from "../../types/tree";
 import { formatFileSize } from "../../utils/format/fileSize";
 import { getNodeSize } from "../../utils/tree/size";
@@ -33,16 +34,14 @@ export const TreeNodeRow = ({
     >
       <div className="flex min-w-0 items-center gap-2">
         {isFolder ? (
-          <span className="w-3 shrink-0 text-xs text-muted">{isExpanded ? "v" : ">"}</span>
+          <span className="flex size-4 shrink-0 items-center justify-center text-primary">
+            {isExpanded ? <FolderOpen size={16} /> : <Folder size={16} />}
+          </span>
         ) : (
-          <span className="w-3 shrink-0" />
+          <span className="flex size-4 shrink-0 items-center justify-center text-primary">
+            <File size={16} />
+          </span>
         )}
-        <span
-          className={clsx(
-            "size-2 shrink-0 rounded-full",
-            node.type === "folder" ? "bg-primary" : "bg-slate-400",
-          )}
-        />
         <span className="truncate font-medium">{node.name}</span>
       </div>
 

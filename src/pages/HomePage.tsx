@@ -1,4 +1,3 @@
-import { clsx } from "clsx";
 import type { ChangeEvent } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,28 +11,12 @@ import { parseJson } from "../utils/validation/jsonValidation";
 import { validateTreeNode } from "../utils/validation/treeValidation";
 
 const VALIDATION_STATUS = {
-  IDLE: "idle",
-  SUCCESS: "success",
   ERROR: "error",
 } as const;
 
-type ValidationStatus =
-  | {
-      type: typeof VALIDATION_STATUS.IDLE;
-      message: string;
-    }
-  | {
-      type: typeof VALIDATION_STATUS.SUCCESS;
-      message: string;
-    }
-  | {
-      type: typeof VALIDATION_STATUS.ERROR;
-      message: string;
-    };
-
-const INITIAL_VALIDATION_STATUS: ValidationStatus = {
-  type: VALIDATION_STATUS.IDLE,
-  message: "Validation message will appear here.",
+type ValidationStatus = {
+  type: typeof VALIDATION_STATUS.ERROR;
+  message: string;
 };
 
 const isJsonFile = (file: File) => {
@@ -49,8 +32,7 @@ const getInitialJsonInput = () => {
 export const HomePage = () => {
   const navigate = useNavigate();
   const [jsonInput, setJsonInput] = useState(getInitialJsonInput);
-  const [validationStatus, setValidationStatus] =
-    useState<ValidationStatus>(INITIAL_VALIDATION_STATUS);
+  const [validationStatus, setValidationStatus] = useState<ValidationStatus | null>(null);
   const isLoadDisabled = jsonInput.trim().length === 0;
 
   const loadJsonInput = (value: string) => {
@@ -75,16 +57,12 @@ export const HomePage = () => {
     }
 
     saveStoredTree(validatedTree.data);
-    setValidationStatus({
-      type: VALIDATION_STATUS.SUCCESS,
-      message: "JSON is valid and matches the expected file tree structure.",
-    });
     navigate(ROUTES.TREE);
   };
 
   const handleJsonInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setJsonInput(event.target.value);
-    setValidationStatus(INITIAL_VALIDATION_STATUS);
+    setValidationStatus(null);
   };
 
   const handleLoadJson = () => {
@@ -94,7 +72,7 @@ export const HomePage = () => {
   const handleClearData = () => {
     clearStoredTree();
     setJsonInput("");
-    setValidationStatus(INITIAL_VALIDATION_STATUS);
+    setValidationStatus(null);
   };
 
   const handleJsonFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -157,16 +135,11 @@ export const HomePage = () => {
           value={jsonInput}
         />
 
-        <div
-          className={clsx(
-            "mt-4 min-h-6 rounded-md px-3 py-2 text-sm",
-            validationStatus.type === VALIDATION_STATUS.IDLE && "bg-transparent text-muted",
-            validationStatus.type === VALIDATION_STATUS.SUCCESS && "bg-green-50 text-success",
-            validationStatus.type === VALIDATION_STATUS.ERROR && "bg-red-50 text-danger",
-          )}
-        >
-          {validationStatus.message}
-        </div>
+        {validationStatus ? (
+          <div className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-danger">
+            {validationStatus.message}
+          </div>
+        ) : null}
 
         <div className="mt-6 flex justify-end gap-3">
           <ClearDataButton disabled={jsonInput.length === 0} onClick={handleClearData} />

@@ -1,3 +1,4 @@
+import { FileX } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { NodeDetailsContent } from "../components/details/NodeDetailsContent";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -37,6 +38,7 @@ export const NodeDetailsPage = () => {
           <EmptyState
             title="Node not found"
             description="The requested file or folder does not exist in the loaded tree."
+            icon={<FileX size={32} />}
             markerClassName="size-16"
           />
         )}

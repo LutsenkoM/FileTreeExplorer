@@ -1,3 +1,4 @@
+import { FolderSearch, SearchX } from "lucide-react";
 import { PageContainer } from "../components/layout/PageContainer";
 import { NodeDetailsPanel } from "../components/details/NodeDetailsPanel";
 import { TreeExplorerProvider } from "../context/treeContext/TreeExplorerProvider";
@@ -27,8 +28,8 @@ const TreePageContent = () => {
       description="Loaded tree data will be displayed here after JSON validation."
       actions={<ClearDataButton disabled={!tree} onClick={handleClearTree} />}
     >
-      <Panel className="grid min-h-[620px] grid-cols-[minmax(360px,480px)_1fr] overflow-hidden">
-        <section className="border-r border-border-soft">
+      <Panel className="grid h-[calc(100vh-180px)] min-h-[620px] grid-cols-[minmax(360px,480px)_1fr] overflow-hidden">
+        <section className="grid min-h-0 grid-rows-[auto_1fr] border-r border-border-soft">
           <div className="border-b border-border-soft p-5">
             <label className="sr-only" htmlFor="tree-search">
               Search files and folders
@@ -44,26 +45,32 @@ const TreePageContent = () => {
             />
           </div>
 
-          <div className="flex min-h-[520px] p-6 text-center">
+          <div className="min-h-0 overflow-y-auto p-6 text-center">
             {displayedTree ? (
               <TreeView expandAll={isSearching} tree={displayedTree} />
             ) : isSearching ? (
-              <EmptyState
-                title="No search results"
-                description="Try another file or folder name."
-                markerClassName="size-14 border-primary/20 bg-primary-soft"
-              />
+              <div className="flex min-h-full items-center justify-center">
+                <EmptyState
+                  title="No search results"
+                  description="Try another file or folder name."
+                  icon={<SearchX size={28} />}
+                  markerClassName="size-14 border-primary/20 bg-primary-soft"
+                />
+              </div>
             ) : (
-              <EmptyState
-                title="No tree loaded yet"
-                description="Load valid JSON from the Home page to render the expandable file tree."
-                markerClassName="size-14 border-primary/20 bg-primary-soft"
-              />
+              <div className="flex min-h-full items-center justify-center">
+                <EmptyState
+                  title="No tree loaded yet"
+                  description="Load valid JSON from the Home page to render the expandable file tree."
+                  icon={<FolderSearch size={28} />}
+                  markerClassName="size-14 border-primary/20 bg-primary-soft"
+                />
+              </div>
             )}
           </div>
         </section>
 
-        <section className="p-8">
+        <section className="min-h-0 overflow-y-auto p-8">
           <NodeDetailsPanel />
         </section>
       </Panel>

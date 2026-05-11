@@ -1,3 +1,4 @@
+import { ExternalLink, MousePointerClick } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTreeExplorer } from "../../context/treeContext/useTreeExplorer";
 import { ROUTES } from "../../constants/routes";
@@ -10,29 +11,36 @@ export const NodeDetailsPanel = () => {
 
   if (!selectedNode || !selectedPath) {
     return (
-      <EmptyState
-        title="Select a file or folder"
-        description="Choose a node from the tree to see details."
-        markerClassName="size-16"
-      />
+      <div className="flex min-h-full items-center justify-center">
+        <EmptyState
+          title="Select a file or folder"
+          description="Choose a node from the tree to see details."
+          icon={<MousePointerClick size={32} />}
+          markerClassName="size-16"
+        />
+      </div>
     );
   }
 
   const detailsLink = (
     <Link
-      className="text-sm font-medium text-primary underline underline-offset-4"
+      aria-label="Open details page"
+      className="!text-primary"
       to={`${ROUTES.TREE}/${encodeNodePath(selectedPath)}`}
+      title="Open details page"
     >
-      Open details page
+      <ExternalLink size={24} />
     </Link>
   );
 
   return (
-    <NodeDetailsContent
-      headerAction={detailsLink}
-      node={selectedNode}
-      nodePath={selectedPath}
-      onSelectPath={selectPath}
-    />
+    <div className="w-full">
+      <NodeDetailsContent
+        headerAction={detailsLink}
+        node={selectedNode}
+        nodePath={selectedPath}
+        onSelectPath={selectPath}
+      />
+    </div>
   );
 };
